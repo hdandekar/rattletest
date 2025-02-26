@@ -10,8 +10,11 @@ from django.utils.translation import gettext_lazy as _
 
 class User(AbstractUser):
     def user_profile_avatar_path(self, instance):
-        print("deleting file", self.avatar.delete)
+        # print("deleting file", self.avatar.delete)
         ext = instance.split(".")[-1]
+        print("Came in user_prpfile")
+        print("path is :")
+        print("{0}/avatars/profile.{1}".format(self.username, ext))
         return "{0}/avatars/profile.{1}".format(self.username, ext)
 
     """Default user for rattletest."""

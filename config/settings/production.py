@@ -1,6 +1,6 @@
 import os
 
-import dj_database_url
+# import dj_database_url
 
 from .base import *  # noqa
 
@@ -25,8 +25,13 @@ ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite://:memory:")
-DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
+# DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite://:memory:")
+DATABASES = {
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgres://postgres:postgres@localhost:5432/postgres",
+    ),
+}
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405

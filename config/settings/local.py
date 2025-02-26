@@ -1,7 +1,9 @@
 import os
 
 from .base import *  # noqa
-from .base import ROOT_DIR, env
+from .base import INSTALLED_APPS
+from .base import MIDDLEWARE
+from .base import env
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -14,6 +16,7 @@ SECRET_KEY = env(
 )
 # https://docs.djangoproject.com/en/dev/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["localhost", "0.0.0.0", "127.0.0.1", "devurl"]
+ALLOWED_HOSTS += env.list("ALLOWED_HOSTS")
 
 # CACHES
 # ------------------------------------------------------------------------------
@@ -29,11 +32,17 @@ CACHES = {
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
+# DATABASES = {
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": ROOT_DIR / "db.sqlite3",
+#     }
+# }
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ROOT_DIR / "db.sqlite3",
-    }
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgres://postgres:postgres@localhost:5432/postgres",
+    ),
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 
@@ -68,11 +77,6 @@ DEBUG_TOOLBAR_CONFIG = {
 INTERNAL_IPS = ["127.0.0.1", "10.0.2.2"]
 
 
-# django-extensions
-# ------------------------------------------------------------------------------
-# https://django-extensions.readthedocs.io/en/latest/installation_instructions.html#configuration
-INSTALLED_APPS += ["django_extensions"]  # noqa F405
-
 # Your stuff...
 # ------------------------------------------------------------------------------
 SOCIALACCOUNT_PROVIDERS = {
@@ -102,6 +106,3 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     },
 }
-
-# django-sslserver
-INSTALLED_APPS += ["sslserver"]  # noqa F405
