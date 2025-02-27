@@ -1,9 +1,7 @@
 import os
 
-
 from .base import *  # noqa
-from .base import env
-from .base import ALLOWED_HOSTS
+from .base import ALLOWED_HOSTS, env
 
 # GENERAL
 # ------------------------------------------------------------------------------

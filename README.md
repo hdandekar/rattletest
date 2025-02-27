@@ -13,7 +13,7 @@ Moved to [settings](https://cookiecutter-django.readthedocs.io/en/latest/1-getti
 
 ## Basic Commands
 
-### Setting up PGSQL database 
+### Setting up PGSQL database
 ```
 CREATE DATABASE <database_name>;
 CREATE USER <user> with encrypted password '<password>';
