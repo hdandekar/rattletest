@@ -1,8 +1,7 @@
 import os
 
-import dj_database_url
-
 from .base import *  # noqa
+from .base import ALLOWED_HOSTS, env
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -14,19 +13,25 @@ DJANGO_ALLOWED_HOSTS = [
     for d in os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")
     if d.strip()
 ]
+ENV_DJANGO_ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
+ALLOWED_HOSTS += DJANGO_ALLOWED_HOSTS + ENV_DJANGO_ALLOWED_HOSTS
 
-ALLOWED_HOSTS = DJANGO_ALLOWED_HOSTS
-
-# DATABASES
-# ------------------------------------------------------------------------------
-# https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 # DATABASES
 # ------------------------------------------------------------------------------
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
-DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite://:memory:")
-DATABASES = {"default": dj_database_url.parse(DATABASE_URL)}
+# DATABASES
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#databases
+
+# DATABASE_URL = os.environ.get("DATABASE_URL", "sqlite://:memory:")
+DATABASES = {
+    "default": env.db(
+        "DATABASE_URL",
+        default="postgres://postgres:postgres@localhost:5432/postgres",
+    ),
+}
 
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
 DATABASES["default"]["CONN_MAX_AGE"] = env.int("CONN_MAX_AGE", default=60)  # noqa F405
@@ -73,8 +78,16 @@ SECURE_CONTENT_TYPE_NOSNIFF = os.environ.get(
 
 # STATIC
 # ------------------------
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
+# STATIC & MEDIA
+# ------------------------
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
 
 # TEMPLATES
 # ------------------------------------------------------------------------------
@@ -124,7 +137,7 @@ ANYMAIL = {
 # ADMIN
 # ------------------------------------------------------------------------------
 # Django Admin URL regex.
-ADMIN_URL = os.environ.get("DJANGO_ADMIN_URL")
+ADMIN_URL = env("DJANGO_ADMIN_URL")
 
 
 # LOGGING
