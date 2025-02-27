@@ -3,7 +3,7 @@ With these settings, tests run faster.
 """
 
 from .base import *  # noqa
-from .base import ROOT_DIR, env
+from .base import BASE_DIR, env
 
 # GENERAL
 # ------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ EMAIL_BACKEND = "django.core.mail.backends.locmem.EmailBackend"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
-        "NAME": ROOT_DIR / "test_db.sqlite3",
+        "NAME": BASE_DIR / "test_db.sqlite3",
     }
 }
 DATABASES["default"]["ATOMIC_REQUESTS"] = True
